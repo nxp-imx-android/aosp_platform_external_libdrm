@@ -1,0 +1,78 @@
+#############################################################################
+# Include common definitions.
+
+include $(AQROOT)/makefile.linux.def
+
+################################################################################
+# Define target module name.
+
+LIBDRM_SONAME := libdrm.so.2.4.0
+LIBDRM_MODULE := $(OBJ_DIR)/libdrm.so.2.4.0
+LIBDRM_LINKS  := libdrm.so libdrm.so.2
+VIVDRM_SONAME := libdrm_vivante.so.1.0.0
+VIVDRM_MODULE := $(OBJ_DIR)/libdrm_vivante.so.1.0.0
+VIVDRM_LINKS  := libdrm_vivante.so libdrm_vivante.so.1
+
+################################################################################
+# Installation directory.
+
+INSTALL_DIR := $(SDK_DIR)/drivers
+
+################################################################################
+
+LIBDRM_OBJS := \
+	$(OBJ_DIR)/xf86drm.o \
+	$(OBJ_DIR)/xf86drmHash.o \
+	$(OBJ_DIR)/xf86drmRandom.o \
+	$(OBJ_DIR)/xf86drmSL.o \
+	$(OBJ_DIR)/xf86drmMode.o
+
+VIVDRM_OBJS := $(OBJ_DIR)/vivante_bo.o
+
+DRM_CFLAGS := \
+	-DHAVE_VISIBILITY=1 \
+	-DHAVE_LIBDRM_ATOMIC_PRIMITIVES=1
+
+CFLAGS += -fPIC $(DRM_CFLAGS) -I. -I./include/drm
+
+LDFLAGS += -Wall -Wl,-z,defs -shared
+
+################################################################################
+# Define targets.
+
+.PHONY: all clean install
+
+all: $(LIBDRM_MODULE) $(VIVDRM_MODULE)
+
+clean:
+	@rm -rf $(OBJ_DIR)
+
+install: all
+	@mkdir -p $(INSTALL_DIR)
+	@cp $(LIBDRM_MODULE) $(INSTALL_DIR)
+	@for lib in $(LIBDRM_LINKS); do \
+		ln -sf $(notdir $(LIBDRM_MODULE)) $(INSTALL_DIR)/$$lib; \
+	done
+	@cp $(VIVDRM_MODULE) $(INSTALL_DIR)
+	@for lib in $(VIVDRM_LINKS); do \
+		ln -sf $(notdir $(VIVDRM_MODULE)) $(INSTALL_DIR)/$$lib; \
+	done
+
+################################################################################
+# Module rules.
+
+$(LIBDRM_MODULE): $(LIBDRM_OBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,-soname,$(LIBDRM_SONAME) -o $(LIBDRM_MODULE) $(LIBDRM_OBJS) -lm
+	@cp $(LIBDRM_MODULE) $(OBJ_DIR)/libdrm.so
+
+$(VIVDRM_MODULE): $(VIVDRM_OBJS) $(LIBDRM_MODULE)
+	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,-soname,$(VIVDRM_SONAME) -o $(VIVDRM_MODULE) $(VIVDRM_OBJS) -L$(OBJ_DIR) -ldrm
+
+################################################################################
+# Object rules.
+
+vpath %.c vivante
+
+$(OBJ_DIR)/%.o: %.c
+	@mkdir -p $(OBJ_DIR)
+	$(CC) -c $(CFLAGS) -MMD -o $@ $<
