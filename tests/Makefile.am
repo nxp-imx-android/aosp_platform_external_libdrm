@@ -30,6 +30,10 @@ if HAVE_NOUVEAU
 SUBDIRS += nouveau
 endif
 
+if HAVE_VIVANTE
+SUBDIRS += vivante
+endif
+
 AM_CFLAGS = \
 	$(WARN_CFLAGS)\
 	-I $(top_srcdir)/include/drm \
