@@ -38,7 +38,7 @@ static pthread_mutex_t table_lock = PTHREAD_MUTEX_INITIALIZER;
 struct fd_device * kgsl_device_new(int fd);
 struct fd_device * msm_device_new(int fd);
 
-drm_public struct fd_device * fd_device_new(int fd)
+struct fd_device * fd_device_new(int fd)
 {
 	struct fd_device *dev;
 	drmVersionPtr version;
@@ -82,7 +82,6 @@ out:
 	dev->handle_table = drmHashCreate();
 	dev->name_table = drmHashCreate();
 	fd_bo_cache_init(&dev->bo_cache, FALSE);
-	fd_bo_cache_init(&dev->ring_cache, TRUE);
 
 	return dev;
 }
@@ -90,7 +89,7 @@ out:
 /* like fd_device_new() but creates it's own private dup() of the fd
  * which is close()d when the device is finalized.
  */
-drm_public struct fd_device * fd_device_new_dup(int fd)
+struct fd_device * fd_device_new_dup(int fd)
 {
 	int dup_fd = dup(fd);
 	struct fd_device *dev = fd_device_new(dup_fd);
@@ -101,7 +100,7 @@ drm_public struct fd_device * fd_device_new_dup(int fd)
 	return dev;
 }
 
-drm_public struct fd_device * fd_device_ref(struct fd_device *dev)
+struct fd_device * fd_device_ref(struct fd_device *dev)
 {
 	atomic_inc(&dev->refcnt);
 	return dev;
@@ -125,7 +124,7 @@ drm_private void fd_device_del_locked(struct fd_device *dev)
 	fd_device_del_impl(dev);
 }
 
-drm_public void fd_device_del(struct fd_device *dev)
+void fd_device_del(struct fd_device *dev)
 {
 	if (!atomic_dec_and_test(&dev->refcnt))
 		return;
@@ -134,12 +133,12 @@ drm_public void fd_device_del(struct fd_device *dev)
 	pthread_mutex_unlock(&table_lock);
 }
 
-drm_public int fd_device_fd(struct fd_device *dev)
+int fd_device_fd(struct fd_device *dev)
 {
 	return dev->fd;
 }
 
-drm_public enum fd_version fd_device_version(struct fd_device *dev)
+enum fd_version fd_device_version(struct fd_device *dev)
 {
 	return dev->version;
 }

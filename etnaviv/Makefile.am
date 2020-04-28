@@ -2,7 +2,6 @@ include Makefile.sources
 
 AM_CFLAGS = \
 	$(WARN_CFLAGS) \
-	-fvisibility=hidden \
 	-I$(top_srcdir) \
 	$(PTHREADSTUBS_CFLAGS) \
 	-I$(top_srcdir)/include/drm
@@ -23,6 +22,5 @@ libdrm_etnavivinclude_HEADERS = $(LIBDRM_ETNAVIV_H_FILES)
 pkgconfigdir = @pkgconfigdir@
 pkgconfig_DATA = libdrm_etnaviv.pc
 
-AM_TESTS_ENVIRONMENT = NM='$(NM)'
 TESTS = etnaviv-symbol-check
 EXTRA_DIST = $(TESTS)

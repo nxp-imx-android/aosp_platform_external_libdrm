@@ -23,7 +23,6 @@ include Makefile.sources
 
 AM_CFLAGS = \
 	$(WARN_CFLAGS) \
-	-fvisibility=hidden \
 	-I$(top_srcdir) \
 	$(PTHREADSTUBS_CFLAGS) \
 	$(VALGRIND_CFLAGS) \

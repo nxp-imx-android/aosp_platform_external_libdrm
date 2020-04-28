@@ -74,13 +74,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "libdrm_macros.h"
 #include "xf86drm.h"
 #include "xf86drmRandom.h"
 
 #define RANDOM_MAGIC 0xfeedbeef
 
-drm_public void *drmRandomCreate(unsigned long seed)
+void *drmRandomCreate(unsigned long seed)
 {
     RandomState  *state;
 
@@ -110,13 +109,13 @@ drm_public void *drmRandomCreate(unsigned long seed)
     return state;
 }
 
-drm_public int drmRandomDestroy(void *state)
+int drmRandomDestroy(void *state)
 {
     drmFree(state);
     return 0;
 }
 
-drm_public unsigned long drmRandom(void *state)
+unsigned long drmRandom(void *state)
 {
     RandomState   *s = (RandomState *)state;
     unsigned long hi;
@@ -130,7 +129,7 @@ drm_public unsigned long drmRandom(void *state)
     return s->seed;
 }
 
-drm_public double drmRandomDouble(void *state)
+double drmRandomDouble(void *state)
 {
     RandomState *s = (RandomState *)state;
     

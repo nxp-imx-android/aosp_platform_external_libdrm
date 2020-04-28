@@ -4,8 +4,7 @@ AM_CPPFLAGS = \
 
 AM_CFLAGS = \
 	@PTHREADSTUBS_CFLAGS@ \
-	$(WARN_CFLAGS) \
-	-fvisibility=hidden
+	$(WARN_CFLAGS)
 
 libdrm_tegra_ladir = $(libdir)
 libdrm_tegra_la_LTLIBRARIES = libdrm_tegra.la
@@ -22,6 +21,5 @@ libdrm_tegrainclude_HEADERS = tegra.h
 pkgconfigdir = @pkgconfigdir@
 pkgconfig_DATA = libdrm_tegra.pc
 
-AM_TESTS_ENVIRONMENT = NM='$(NM)'
 TESTS = tegra-symbol-check
 EXTRA_DIST = $(TESTS)

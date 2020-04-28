@@ -33,7 +33,7 @@
  * priority of zero is highest priority, and higher numeric values are
  * lower priorities
  */
-drm_public struct fd_pipe *
+struct fd_pipe *
 fd_pipe_new2(struct fd_device *dev, enum fd_pipe_id id, uint32_t prio)
 {
 	struct fd_pipe *pipe;
@@ -57,7 +57,6 @@ fd_pipe_new2(struct fd_device *dev, enum fd_pipe_id id, uint32_t prio)
 
 	pipe->dev = dev;
 	pipe->id = id;
-	atomic_set(&pipe->refcnt, 1);
 
 	fd_pipe_get_param(pipe, FD_GPU_ID, &val);
 	pipe->gpu_id = val;
@@ -65,37 +64,29 @@ fd_pipe_new2(struct fd_device *dev, enum fd_pipe_id id, uint32_t prio)
 	return pipe;
 }
 
-drm_public struct fd_pipe *
+struct fd_pipe *
 fd_pipe_new(struct fd_device *dev, enum fd_pipe_id id)
 {
 	return fd_pipe_new2(dev, id, 1);
 }
 
-drm_public struct fd_pipe * fd_pipe_ref(struct fd_pipe *pipe)
+void fd_pipe_del(struct fd_pipe *pipe)
 {
-	atomic_inc(&pipe->refcnt);
-	return pipe;
-}
-
-drm_public void fd_pipe_del(struct fd_pipe *pipe)
-{
-	if (!atomic_dec_and_test(&pipe->refcnt))
-		return;
 	pipe->funcs->destroy(pipe);
 }
 
-drm_public int fd_pipe_get_param(struct fd_pipe *pipe,
+int fd_pipe_get_param(struct fd_pipe *pipe,
 				 enum fd_param_id param, uint64_t *value)
 {
 	return pipe->funcs->get_param(pipe, param, value);
 }
 
-drm_public int fd_pipe_wait(struct fd_pipe *pipe, uint32_t timestamp)
+int fd_pipe_wait(struct fd_pipe *pipe, uint32_t timestamp)
 {
 	return fd_pipe_wait_timeout(pipe, timestamp, ~0);
 }
 
-drm_public int fd_pipe_wait_timeout(struct fd_pipe *pipe, uint32_t timestamp,
+int fd_pipe_wait_timeout(struct fd_pipe *pipe, uint32_t timestamp,
 		uint64_t timeout)
 {
 	return pipe->funcs->wait(pipe, timestamp, timeout);

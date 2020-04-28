@@ -26,7 +26,6 @@ include Makefile.sources
 
 AM_CFLAGS = \
 	$(WARN_CFLAGS) \
-	-fvisibility=hidden \
 	-I$(top_srcdir) \
 	$(PTHREADSTUBS_CFLAGS) \
 	$(PCIACCESS_CFLAGS) \
@@ -57,7 +56,6 @@ BATCHES = \
 	tests/gen7-2d-copy.batch \
 	tests/gen7-3d.batch
 
-AM_TESTS_ENVIRONMENT = NM='$(NM)'
 TESTS = \
 	$(BATCHES:.batch=.batch.sh) \
 	intel-symbol-check

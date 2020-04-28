@@ -24,6 +24,7 @@
 #ifndef QXL_DRM_H
 #define QXL_DRM_H
 
+#include <stddef.h>
 #include "drm.h"
 
 #if defined(__cplusplus)
@@ -88,6 +89,7 @@ struct drm_qxl_command {
 	__u32                pad;
 };
 
+/* XXX: call it drm_qxl_commands? */
 struct drm_qxl_execbuffer {
 	__u32		flags;		/* for future use */
 	__u32		commands_num;

@@ -41,7 +41,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "libdrm_macros.h"
 #include "xf86drm.h"
 
 #define SL_LIST_MAGIC  0xfacade00LU
@@ -98,7 +97,7 @@ static int SLRandomLevel(void)
     return level;
 }
 
-drm_public void *drmSLCreate(void)
+void *drmSLCreate(void)
 {
     SkipListPtr  list;
     int          i;
@@ -115,7 +114,7 @@ drm_public void *drmSLCreate(void)
     return list;
 }
 
-drm_public int drmSLDestroy(void *l)
+int drmSLDestroy(void *l)
 {
     SkipListPtr   list  = (SkipListPtr)l;
     SLEntryPtr    entry;
@@ -152,7 +151,7 @@ static SLEntryPtr SLLocate(void *l, unsigned long key, SLEntryPtr *update)
     return entry->forward[0];
 }
 
-drm_public int drmSLInsert(void *l, unsigned long key, void *value)
+int drmSLInsert(void *l, unsigned long key, void *value)
 {
     SkipListPtr   list  = (SkipListPtr)l;
     SLEntryPtr    entry;
@@ -185,7 +184,7 @@ drm_public int drmSLInsert(void *l, unsigned long key, void *value)
     return 0;			/* Added to table */
 }
 
-drm_public int drmSLDelete(void *l, unsigned long key)
+int drmSLDelete(void *l, unsigned long key)
 {
     SkipListPtr   list = (SkipListPtr)l;
     SLEntryPtr    update[SL_MAX_LEVEL + 1];
@@ -212,7 +211,7 @@ drm_public int drmSLDelete(void *l, unsigned long key)
     return 0;
 }
 
-drm_public int drmSLLookup(void *l, unsigned long key, void **value)
+int drmSLLookup(void *l, unsigned long key, void **value)
 {
     SkipListPtr   list = (SkipListPtr)l;
     SLEntryPtr    update[SL_MAX_LEVEL + 1];
@@ -228,9 +227,9 @@ drm_public int drmSLLookup(void *l, unsigned long key, void **value)
     return -1;
 }
 
-drm_public int drmSLLookupNeighbors(void *l, unsigned long key,
-                                    unsigned long *prev_key, void **prev_value,
-                                    unsigned long *next_key, void **next_value)
+int drmSLLookupNeighbors(void *l, unsigned long key,
+			 unsigned long *prev_key, void **prev_value,
+			 unsigned long *next_key, void **next_value)
 {
     SkipListPtr   list = (SkipListPtr)l;
     SLEntryPtr    update[SL_MAX_LEVEL + 1] = {0};
@@ -254,7 +253,7 @@ drm_public int drmSLLookupNeighbors(void *l, unsigned long key,
     return retcode;
 }
 
-drm_public int drmSLNext(void *l, unsigned long *key, void **value)
+int drmSLNext(void *l, unsigned long *key, void **value)
 {
     SkipListPtr   list = (SkipListPtr)l;
     SLEntryPtr    entry;
@@ -273,7 +272,7 @@ drm_public int drmSLNext(void *l, unsigned long *key, void **value)
     return 0;
 }
 
-drm_public int drmSLFirst(void *l, unsigned long *key, void **value)
+int drmSLFirst(void *l, unsigned long *key, void **value)
 {
     SkipListPtr   list = (SkipListPtr)l;
     
@@ -284,7 +283,7 @@ drm_public int drmSLFirst(void *l, unsigned long *key, void **value)
 }
 
 /* Dump internal data structures for debugging. */
-drm_public void drmSLDump(void *l)
+void drmSLDump(void *l)
 {
     SkipListPtr   list = (SkipListPtr)l;
     SLEntryPtr    entry;

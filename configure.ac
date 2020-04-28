@@ -20,7 +20,7 @@
 
 AC_PREREQ([2.63])
 AC_INIT([libdrm],
-        [2.4.99],
+        [2.4.91],
         [https://bugs.freedesktop.org/enter_bug.cgi?product=DRI],
         [libdrm])
 
@@ -147,6 +147,11 @@ AC_ARG_ENABLE(tegra-experimental-api,
 	      AS_HELP_STRING([--enable-tegra-experimental-api],
 	      [Enable support for Tegra's experimental API (default: disabled)]),
 	      [TEGRA=$enableval], [TEGRA=no])
+
+AC_ARG_ENABLE(rockchip-experimental-api,
+	      AS_HELP_STRING([--enable-rockchip-experimental-api],
+	      [Enable support for rockchip's experimental API (default: disabled)]),
+	      [ROCKCHIP=$enableval], [ROCKCHIP=no])
 
 AC_ARG_ENABLE(vc4,
 	      AS_HELP_STRING([--disable-vc4],
@@ -448,6 +453,11 @@ fi
 
 AM_CONDITIONAL(HAVE_TEGRA, [test "x$TEGRA" = xyes])
 
+AM_CONDITIONAL(HAVE_ROCKCHIP, [test "x$ROCKCHIP" = xyes])
+if test "x$ROCKCHIP" = xyes; then
+	AC_DEFINE(HAVE_ROCKCHIP, 1, [Have ROCKCHIP support])
+fi
+
 AM_CONDITIONAL(HAVE_VC4, [test "x$VC4" = xyes])
 if test "x$VC4" = xyes; then
 	AC_DEFINE(HAVE_VC4, 1, [Have VC4 support])
@@ -541,7 +551,7 @@ else
     AC_DEFINE(HAVE_VISIBILITY, 0)
 fi
 
-CPPFLAGS="$CPPFLAGS -include config.h"
+CFLAGS="$CFLAGS -include config.h"
 
 AC_SUBST(WARN_CFLAGS)
 AC_CONFIG_FILES([
@@ -565,6 +575,8 @@ AC_CONFIG_FILES([
 	freedreno/libdrm_freedreno.pc
 	tegra/Makefile
 	tegra/libdrm_tegra.pc
+	rockchip/Makefile
+	rockchip/libdrm_rockchip.pc
 	vc4/Makefile
 	vc4/libdrm_vc4.pc
 	etnaviv/Makefile
@@ -581,6 +593,7 @@ AC_CONFIG_FILES([
 	tests/exynos/Makefile
 	tests/tegra/Makefile
 	tests/nouveau/Makefile
+	tests/planetest/Makefile
 	tests/etnaviv/Makefile
 	tests/util/Makefile
 	man/Makefile
@@ -600,6 +613,7 @@ echo "  OMAP API       $OMAP"
 echo "  EXYNOS API     $EXYNOS"
 echo "  Freedreno API  $FREEDRENO (kgsl: $FREEDRENO_KGSL)"
 echo "  Tegra API      $TEGRA"
+echo "  Rockchip API   $ROCKCHIP"
 echo "  VC4 API        $VC4"
 echo "  Etnaviv API    $ETNAVIV"
 echo ""

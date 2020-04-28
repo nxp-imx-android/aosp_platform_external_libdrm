@@ -1,7 +1,6 @@
 AM_CFLAGS = \
 	-pthread \
 	$(WARN_CFLAGS) \
-	-fvisibility=hidden \
 	-I$(top_srcdir)/include/drm \
 	-I$(top_srcdir)/nouveau \
 	-I$(top_srcdir)

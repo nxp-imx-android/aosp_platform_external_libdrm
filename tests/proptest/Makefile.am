@@ -2,7 +2,6 @@ include Makefile.sources
 
 AM_CFLAGS = \
 	$(WARN_CFLAGS)\
-	-fvisibility=hidden \
 	-I$(top_srcdir)/include/drm \
 	-I$(top_srcdir)/tests \
 	-I$(top_srcdir)

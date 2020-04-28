@@ -35,6 +35,7 @@
 static void msm_device_destroy(struct fd_device *dev)
 {
 	struct msm_device *msm_dev = to_msm_device(dev);
+	fd_bo_cache_cleanup(&msm_dev->ring_cache, 0);
 	free(msm_dev);
 }
 
@@ -56,6 +57,8 @@ drm_private struct fd_device * msm_device_new(int fd)
 
 	dev = &msm_dev->base;
 	dev->funcs = &funcs;
+
+	fd_bo_cache_init(&msm_dev->ring_cache, TRUE);
 
 	dev->bo_size = sizeof(struct msm_bo);
 

@@ -1,6 +1,5 @@
 AM_CFLAGS = \
 	$(WARN_CFLAGS)\
-	-fvisibility=hidden \
 	-I$(top_srcdir)/include/drm \
 	-I$(top_srcdir)/tests \
 	-I$(top_srcdir)
@@ -16,5 +15,4 @@ endif
 modeprint_SOURCES = \
 	modeprint.c
 modeprint_LDADD = \
-	$(top_builddir)/tests/util/libutil.la \
 	$(top_builddir)/libdrm.la

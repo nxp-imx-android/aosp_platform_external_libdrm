@@ -4,8 +4,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)
 
 AM_CFLAGS = \
-	$(WARN_CFLAGS) \
-	-fvisibility=hidden
+	$(WARN_CFLAGS)
 
 noinst_LTLIBRARIES = libkms-test.la
 
